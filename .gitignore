@@ -1,0 +1,5 @@
+.vercel
+vendor/
+Makefile
+gin-temp-app.exe
+.env

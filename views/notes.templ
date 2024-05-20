@@ -1,0 +1,156 @@
+package views
+
+import ( 
+    "gin-temp-app/types"
+    "fmt"
+)
+
+
+css MainDiv(){
+    display: flex;
+    min-height: calc(100vh - 60px);
+    flex-direction: row;
+    gap: 40px;
+    width: 100%;
+    padding: 50px;
+    box-sizing: border-box;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+css singleNote(){
+    display: flex;
+    flex-direction: column;
+    width: 340px;
+    height: 200px;
+    justify-content: flex-start;
+    background-color: #f0f0f0; 
+    border-radius: 15px;
+    padding: 20px 20px;
+
+}
+
+
+
+css disabledFa(){
+    outline: none;
+    border: 0px;
+}
+
+css NoteTitle(){
+    font-size: 18px;
+    font-weight: bold;
+    color: #6f42c1; 
+    margin-bottom: 5px;
+}
+
+css NoteContent(){
+    color: #333333;
+
+}
+
+
+css EditDiv(){
+    margin: 0 auto;
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
+css EditButton(){
+   
+    width: 100px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+templ AllNotes(notes []types.Note){
+
+    <div hx-target="closest section" hx-swap="outerHTML" class={MainDiv()}>
+        for _,item := range notes{
+            
+            @SingleNote(&item)
+        }
+        @CreateButton()
+    </div>
+
+}
+templ SingleNote(note *types.Note){
+    <section id={string(fmt.Sprintf("inner%s", note.ID.Hex()))} class={singleNote()}>
+                <input class={disabledFa(), NoteTitle()} name='title' value={note.Title} disabled />
+                <input class={NoteContent(), disabledFa()} disabled name='content' value={note.Content} disabled />
+                <div class={EditDiv()}>
+                    <button class={EditButton()} class="btn btn-danger"
+                            hx-get={string(templ.URL(fmt.Sprintf("/notes/%s/edit", note.ID.Hex())))}
+                            hx-trigger="edit"
+                            onClick="let editing = document.querySelector('.editing')
+                                    if(editing) {
+                                    Swal.fire({title: 'Already Editing',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Yep, Edit This Row!',
+                                                text:'Hey!  You are already editing a row!  Do you want to cancel that edit and continue?'})
+                                    .then((result) => {
+                                            if(result.isConfirmed) {
+                                            htmx.trigger(editing, 'cancel')
+                                            htmx.trigger(this, 'edit')
+                                            }
+                                        })
+                                    } else {
+                                        htmx.trigger(this, 'edit')
+                                    }">
+                                  Edit
+                    </button>
+                </div>
+        
+    
+    </section>
+ }
+
+
+templ EditNotes(note *types.Note){
+    <section class={singleNote()} hx-trigger='cancel' class='editing' hx-get={string(templ.URL(fmt.Sprintf("/notes/%s", note.ID.Hex())))} >
+            <input class={NoteTitle()} name='title' value={note.Title} />
+     
+            <input class={NoteContent()} name='content' value={note.Content} />
+            <div class={EditDiv()}>
+                <button class={EditButton()} class="btn btn-danger" hx-get={string(templ.URL(fmt.Sprintf("/notes/%s", note.ID.Hex())))}>
+                Cancel
+                </button>
+                <button class={EditButton()} class="btn btn-danger" hx-put={string(templ.URL(fmt.Sprintf("/notes/%s/edit", note.ID.Hex())))} hx-include={"closest section"}>
+                Save
+                </button>
+            </div>
+    </section>
+
+}
+
+
+templ CreateNoteForm(){
+    <div class={MainDiv()}>
+            <form hx-replace-url="true" class={singleNote()} hx-target="closest body" style="margin: 0 auto;" hx-post={"/notes/save"}  >
+                <input class={NoteTitle()} name='title'  />
+        
+                <textarea class={NoteContent()} name='content'  />
+                <div class={EditDiv()}>
+                    <button class={EditButton()} type={"submit"}>
+                    Save
+                    </button>
+                </div>
+            </form>
+            <div id="err"></div>
+    </div>
+}
+
+css createButton(){
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 70px;
+    padding: 5px;
+    background-color: #f1f5f9;
+}
+templ CreateButton(){
+    <a class={createButton()} href="/notes/create">
+    Create Note
+    </a>
+}

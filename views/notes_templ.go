@@ -761,8 +761,11 @@ func createButton() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder.WriteString(`bottom:0;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`right:0;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`width:70px;`)
-	templ_7745c5c3_CSSBuilder.WriteString(`padding:5px;`)
-	templ_7745c5c3_CSSBuilder.WriteString(`background-color:#f1f5f9;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`padding:7px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`background-color:rgba(139, 92, 246, 0.1);`)
+	templ_7745c5c3_CSSBuilder.WriteString(`border-radius:10px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`margin-bottom:20px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`margin-right:20px;`)
 	templ_7745c5c3_CSSID := templ.CSSID(`createButton`, templ_7745c5c3_CSSBuilder.String())
 	return templ.ComponentCSSClass{
 		ID:    templ_7745c5c3_CSSID,
@@ -801,7 +804,7 @@ func CreateButton() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" href=\"/notes/create\">Create Note</a>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" href=\"/notes/create\">Add Note</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

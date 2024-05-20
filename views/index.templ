@@ -41,6 +41,12 @@ templ Base(name string,children ...templ.Component){
             //     }
             // </main>
         // @MakeFooter()
+        <style>
+            a {
+                outline: none;
+                color: black;
+            }
+        </style>
         <body  class={baseCss()}>
             @Header(name)
             // @Login()
